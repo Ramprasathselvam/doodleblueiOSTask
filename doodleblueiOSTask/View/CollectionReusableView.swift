@@ -11,6 +11,5 @@ import UIKit
 class CollectionReusableView: UICollectionReusableView {
     
     @IBOutlet var headerLabel:UILabel!
-    @IBOutlet var collectionViewImage:UIImageView!
-        
+    
 }

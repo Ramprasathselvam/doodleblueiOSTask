@@ -10,6 +10,7 @@ import UIKit
 
 class CollectionViewCell: UICollectionViewCell {
     
+    //Properties
     @IBOutlet var title:UILabel!
     @IBOutlet var image:UIImageView!
     @IBOutlet var bgView:UIView!

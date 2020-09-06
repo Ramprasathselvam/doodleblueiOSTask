@@ -19,7 +19,7 @@ class ViewController: UIViewController, UIGestureRecognizerDelegate,UICollection
     
     //MARK: - Variables
     var isHeaderCollapse:Bool = false
-    var isSelectionEnable:Bool = false
+    var isMultiSelection:Bool = false
     var laseSelectedSell:Int?
 
     private var viewModel = [CollectionListViewModel]()
@@ -79,7 +79,7 @@ class ViewController: UIViewController, UIGestureRecognizerDelegate,UICollection
         }
         let position = gestureRecognizer.location(in: collectionView)
         if let indexPath = collectionView?.indexPathForItem(at: position) {
-            self.isSelectionEnable = true
+            self.isMultiSelection = true
             viewModel[indexPath.row].isSelected = !viewModel[indexPath.row].isSelected
             self.collectionView.reloadData()
         }
@@ -94,19 +94,15 @@ class ViewController: UIViewController, UIGestureRecognizerDelegate,UICollection
             self.refreshView.endRefreshing()
         })
     }
+    
     //MARK: - Button Actions
-    //
+    // collapse & Expand Collection views
     @IBAction func collapseButton(){
         self.isHeaderCollapse = !self.isHeaderCollapse
         self.collectionView.reloadData()
     }
 
-//MARK: - CollectionView
-    
-    func numberOfSections(in collectionView: UICollectionView) -> Int {
-        return 1
-    }
-    
+    //MARK: - CollectionView
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         if isHeaderCollapse{
             return 0
@@ -134,7 +130,7 @@ class ViewController: UIViewController, UIGestureRecognizerDelegate,UICollection
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let row = indexPath.row
         viewModel[row].isSelected = !(viewModel[row].isSelected)
-        if isSelectionEnable {
+        if isMultiSelection {
             //Multiple Selection
             collectionView.reloadData()
             for item in viewModel{
@@ -142,7 +138,7 @@ class ViewController: UIViewController, UIGestureRecognizerDelegate,UICollection
                     return
                 }
             }
-            self.isSelectionEnable = false
+            self.isMultiSelection = false
         }else{
             //Single Selection
             if viewModel[row].isSelected{
