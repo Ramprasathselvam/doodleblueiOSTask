@@ -23,24 +23,34 @@ class ViewController: UIViewController, UIGestureRecognizerDelegate,UICollection
     var laseSelectedSell:Int?
 
     private var viewModel = [CollectionListViewModel]()
+    
+    //Refresh Controll
+    var refreshView = UIRefreshControl()
 
     //MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view.
-        
+        // CollectionView
         self.collectionView.delegate = self
         self.collectionView.dataSource = self
         
+        //Set up methods
         self.getData()
         self.setupLongGestureRecognizerOnCollectionView()
+        
+        //Refresh View
+        refreshView = UIRefreshControl()
+        refreshView.addTarget(self, action: #selector(updateCollectionList), for: .valueChanged)
+        refreshView.tintColor = UIColor.darkGray
+        refreshView.attributedTitle = NSAttributedString(string: "Updating..", attributes: nil)
+        self.collectionView.addSubview(refreshView)
     }
 
     override func viewWillLayoutSubviews() {
         collectionView.reloadData()
     }
     
-    //MARK: - Fetch Data
+    // Get Data
     fileprivate func getData(){
         let data = CommonHelper().fetchData()
         do {
@@ -54,7 +64,7 @@ class ViewController: UIViewController, UIGestureRecognizerDelegate,UICollection
         }
     }
     
-    //MARK: - Multi Selection Long Press Gesture
+    // Multi Selection Long Press Gesture
     private func setupLongGestureRecognizerOnCollectionView() {
         let longPressedGesture = UILongPressGestureRecognizer(target: self, action: #selector(handleLongPress(gestureRecognizer:)))
         longPressedGesture.minimumPressDuration = 0.5
@@ -75,6 +85,17 @@ class ViewController: UIViewController, UIGestureRecognizerDelegate,UICollection
         }
     }
     
+    //Refresh View
+    @objc func updateCollectionList(){
+        //TODO: - Change in Feature
+        DispatchQueue.main.asyncAfter(deadline: .now() + 2, execute: {
+            self.getData()
+            self.collectionView.reloadData()
+            self.refreshView.endRefreshing()
+        })
+    }
+    //MARK: - Button Actions
+    //
     @IBAction func collapseButton(){
         self.isHeaderCollapse = !self.isHeaderCollapse
         self.collectionView.reloadData()
@@ -124,7 +145,9 @@ class ViewController: UIViewController, UIGestureRecognizerDelegate,UICollection
             self.isSelectionEnable = false
         }else{
             //Single Selection
-            self.collapseButton()
+            if viewModel[row].isSelected{
+                self.collapseButton()
+            }
             self.collectionView.reloadData()
         }
     }
