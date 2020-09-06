@@ -8,5 +8,5 @@ Collection View Logical
 3. Single Selection - auto collapse.
 4. multiple selection - Long Press to select Multiple Cells.
 5. Pattern - <b>MVVM</b>
-6. 
+6. Pull to Refresh.
 
